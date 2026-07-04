@@ -1,6 +1,7 @@
 package org.jakub.craftdesk.gui;
 
 import org.jakub.craftdesk.config.ConfigManager;
+import org.jakub.craftdesk.theme.ThemeManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,6 +9,7 @@ import java.awt.*;
 public class ContentPanel extends JPanel {
 
     private ConfigManager configManager;
+    private ThemeManager themeManager;
     private CardLayout cardLayout = new CardLayout();
 
     private DashboardPanel dashboardPanel;
@@ -16,14 +18,15 @@ public class ContentPanel extends JPanel {
     private ServersPanel serversPanel;
     private SettingsPanel settingsPanel;
 
-    public ContentPanel(ConfigManager configManager) {
+    public ContentPanel(ConfigManager configManager , ThemeManager themeManager) {
 
         this.configManager = configManager;
+        this.themeManager = themeManager;
 
         setLayout(cardLayout);
         setBounds(250, 0, 950, 700);
 
-        dashboardPanel = new DashboardPanel(configManager);
+        dashboardPanel = new DashboardPanel(configManager , themeManager);
         worldsPanel = new WorldsPanel();
         modsPanel = new ModsPanel();
         serversPanel = new ServersPanel();

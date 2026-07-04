@@ -2,11 +2,10 @@ package org.jakub.craftdesk.gui;
 
 import javax.swing.*;
 import java.awt.*;
+import org.jakub.craftdesk.theme.ThemeManager;
 
 public class SideBarPanel extends JPanel {
-    private static final Color BUTTON = new Color(60, 60, 60);
-    private static final Color ACTIVE = new Color(0, 120, 215);
-    private static final Color SIDEBAR = new Color(35, 35, 35);
+    private ThemeManager themeManager;
 
     private void ustawAktywnyPrzycisk(
             JButton aktywny,
@@ -25,18 +24,19 @@ public class SideBarPanel extends JPanel {
         };
 
         for (JButton przycisk : przyciski) {
-            przycisk.setBackground(BUTTON);
-            przycisk.setForeground(Color.LIGHT_GRAY);
+            przycisk.setBackground(themeManager.getButtonColor());
+            przycisk.setForeground(themeManager.getSecondaryTextColor());
         }
 
-        aktywny.setBackground(ACTIVE);
-        aktywny.setForeground(Color.WHITE);
+        aktywny.setBackground(themeManager.getActiveButtonColor());
+        aktywny.setForeground(themeManager.getTextColor());
     }
 
-    public SideBarPanel(ContentPanel contentPanel) {
+    public SideBarPanel(ContentPanel contentPanel , ThemeManager themeManager) {
+        this.themeManager = themeManager;
 
         setLayout(null);
-        setBackground(SIDEBAR);
+        setBackground(themeManager.getSidebarColor());
         setBounds(0, 0, 250, 700);
 
         JLabel version = new JLabel("Alpha 0.1");
@@ -54,16 +54,16 @@ public class SideBarPanel extends JPanel {
         mody.setText(LanguageManager.get("sidebar.mods"));
         serwery.setText(LanguageManager.get("sidebar.servers"));
         ustawienia.setText(LanguageManager.get("sidebar.settings"));
-        dashboard.setBackground(ACTIVE);
-        swiaty.setBackground(BUTTON);
-        mody.setBackground(BUTTON);
-        serwery.setBackground(BUTTON);
-        ustawienia.setBackground(BUTTON);
-        dashboard.setForeground(Color.WHITE);
-        swiaty.setForeground(Color.LIGHT_GRAY);
-        mody.setForeground(Color.LIGHT_GRAY);
-        serwery.setForeground(Color.LIGHT_GRAY);
-        ustawienia.setForeground(Color.LIGHT_GRAY);
+        dashboard.setBackground(themeManager.getActiveButtonColor());
+        swiaty.setBackground(themeManager.getButtonColor());
+        mody.setBackground(themeManager.getButtonColor());
+        serwery.setBackground(themeManager.getButtonColor());
+        ustawienia.setBackground(themeManager.getButtonColor());
+        dashboard.setForeground(themeManager.getTextColor());
+        swiaty.setForeground(themeManager.getSecondaryTextColor());
+        mody.setForeground(themeManager.getSecondaryTextColor());
+        serwery.setForeground(themeManager.getSecondaryTextColor());
+        ustawienia.setForeground(themeManager.getSecondaryTextColor());
         dashboard.setBounds(30, 20, 190, 80);
         swiaty.setBounds(30, 120, 190, 80);
         mody.setBounds(30, 220, 190, 80);

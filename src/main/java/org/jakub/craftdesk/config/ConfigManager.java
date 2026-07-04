@@ -2,7 +2,6 @@ package org.jakub.craftdesk.config;
 
 import java.io.*;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 public class ConfigManager {
 
@@ -110,5 +109,9 @@ public class ConfigManager {
 
     public String getUsername() {
         return username;
+    }
+
+    public String getTheme() {
+        return theme;
     }
 }

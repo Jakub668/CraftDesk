@@ -1,19 +1,20 @@
 package org.jakub.craftdesk.gui;
 
 import org.jakub.craftdesk.config.ConfigManager;
+import org.jakub.craftdesk.theme.ThemeManager;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class DashboardPanel extends JPanel {
-    private static final Color TLO = new Color(45,45,45);
-    private static final Color BLUE = new Color(1, 105, 187);
     private ConfigManager configManager;
+    private ThemeManager themeManager;
 
-    public DashboardPanel(ConfigManager configManager) {
+    public DashboardPanel(ConfigManager configManager , ThemeManager themeManager) {
         this.configManager = configManager;
+        this.themeManager = themeManager;
         setLayout(null);
-        setBackground(TLO);
+        setBackground(themeManager.getBackgroundColor());
         setBounds(250, 0, 950, 700);
         ImageIcon icon = new ImageIcon(getClass().getResource("/images/icon.png"));
         Image image = icon.getImage().getScaledInstance(120, 120, Image.SCALE_SMOOTH);
@@ -23,19 +24,19 @@ public class DashboardPanel extends JPanel {
 
         JLabel title = new JLabel(LanguageManager.get("dashboard.title"));
         title.setFont(new Font("Roboto", Font.BOLD, 40));
-        title.setForeground(BLUE);
+        title.setForeground(themeManager.getPrimaryColor());
         title.setBounds(350, 120, 250, 100);
         add(title);
 
         JLabel welcome = new JLabel(LanguageManager.get("dashboard.welcome") + " " + configManager.getUsername() + "!");
         welcome.setFont(new Font("Roboto", Font.BOLD, 30));
-        welcome.setForeground(BLUE);
+        welcome.setForeground(themeManager.getPrimaryColor());
         welcome.setBounds(360, 200, 250, 100);
         add(welcome);
 
         JLabel text = new JLabel(LanguageManager.get("dashboard.description"));
         text.setFont(new Font("Roboto", Font.BOLD, 20));
-        text.setForeground(BLUE);
+        text.setForeground(themeManager.getPrimaryColor());
         text.setBounds(250, 300, 400, 100);
         add(text);
 
@@ -45,9 +46,9 @@ public class DashboardPanel extends JPanel {
         worlds.setLayout(null);
         mods.setLayout(null);
         servers.setLayout(null);
-        worlds.setBorder(BorderFactory.createLineBorder(BLUE, 5));
-        mods.setBorder(BorderFactory.createLineBorder(BLUE, 5));
-        servers.setBorder(BorderFactory.createLineBorder(BLUE, 5));
+        worlds.setBorder(BorderFactory.createLineBorder(themeManager.getPrimaryColor(), 5));
+        mods.setBorder(BorderFactory.createLineBorder(themeManager.getPrimaryColor(), 5));
+        servers.setBorder(BorderFactory.createLineBorder(themeManager.getPrimaryColor(), 5));
         worlds.setBackground(Color.WHITE);
         mods.setBackground(Color.WHITE);
         servers.setBackground(Color.WHITE);

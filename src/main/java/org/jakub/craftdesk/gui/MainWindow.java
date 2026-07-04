@@ -2,13 +2,16 @@ package org.jakub.craftdesk.gui;
 
 import javax.swing.*;
 import org.jakub.craftdesk.config.ConfigManager;
+import org.jakub.craftdesk.theme.ThemeManager;
 
 public class MainWindow {
     private ConfigManager configManager;
+    private ThemeManager themeManager;
 
     JFrame frame;
-    public MainWindow(ConfigManager configManager) {
+    public MainWindow(ConfigManager configManager , ThemeManager themeManager) {
         this.configManager = configManager;
+        this.themeManager = themeManager;
 
         ImageIcon icon = new ImageIcon(getClass().getResource("/images/icon.png"));
 
@@ -26,10 +29,10 @@ public class MainWindow {
 
         frame.setLayout(null);
 
-        ContentPanel contentPanel = new ContentPanel(configManager);
+        ContentPanel contentPanel = new ContentPanel(configManager , themeManager);
         frame.add(contentPanel);
 
-        SideBarPanel sideBarPanel = new SideBarPanel(contentPanel);
+        SideBarPanel sideBarPanel = new SideBarPanel(contentPanel , themeManager);
         frame.add(sideBarPanel);
 
         ConfigManager config = new ConfigManager();
