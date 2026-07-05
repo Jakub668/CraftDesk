@@ -9,10 +9,12 @@ import java.awt.*;
 public class DashboardPanel extends JPanel {
     private ConfigManager configManager;
     private ThemeManager themeManager;
+    private LanguageManager languageManager;
 
-    public DashboardPanel(ConfigManager configManager , ThemeManager themeManager) {
+    public DashboardPanel(ConfigManager configManager , ThemeManager themeManager , LanguageManager languageManager) {
         this.configManager = configManager;
         this.themeManager = themeManager;
+        this.languageManager = languageManager;
         setLayout(null);
         setBackground(themeManager.getBackgroundColor());
         setBounds(250, 0, 950, 700);
@@ -22,19 +24,19 @@ public class DashboardPanel extends JPanel {
         iconLabel.setBounds(380, 6, 120, 120);
         add(iconLabel);
 
-        JLabel title = new JLabel(LanguageManager.get("dashboard.title"));
+        JLabel title = new JLabel(languageManager.get("dashboard.title"));
         title.setFont(new Font("Roboto", Font.BOLD, 40));
         title.setForeground(themeManager.getPrimaryColor());
         title.setBounds(350, 120, 250, 100);
         add(title);
 
-        JLabel welcome = new JLabel(LanguageManager.get("dashboard.welcome") + " " + configManager.getUsername() + "!");
+        JLabel welcome = new JLabel(languageManager.get("dashboard.welcome") + " " + configManager.getUsername() + "!");
         welcome.setFont(new Font("Roboto", Font.BOLD, 30));
         welcome.setForeground(themeManager.getPrimaryColor());
         welcome.setBounds(360, 200, 250, 100);
         add(welcome);
 
-        JLabel text = new JLabel(LanguageManager.get("dashboard.description"));
+        JLabel text = new JLabel(languageManager.get("dashboard.description"));
         text.setFont(new Font("Roboto", Font.BOLD, 20));
         text.setForeground(themeManager.getPrimaryColor());
         text.setBounds(250, 300, 400, 100);
@@ -58,9 +60,9 @@ public class DashboardPanel extends JPanel {
         add(worlds);
         add(mods);
         add(servers);
-        JLabel Wtext = new JLabel(LanguageManager.get("dashboard.worlds"));
-        JLabel Mtext = new JLabel(LanguageManager.get("dashboard.mods"));
-        JLabel Stext = new JLabel(LanguageManager.get("dashboard.servers"));
+        JLabel Wtext = new JLabel(languageManager.get("dashboard.worlds"));
+        JLabel Mtext = new JLabel(languageManager.get("dashboard.mods"));
+        JLabel Stext = new JLabel(languageManager.get("dashboard.servers"));
         Wtext.setFont(new Font("Roboto", Font.BOLD, 20));
         Mtext.setFont(new Font("Roboto", Font.BOLD, 20));
         Stext.setFont(new Font("Roboto", Font.BOLD, 20));
@@ -74,9 +76,9 @@ public class DashboardPanel extends JPanel {
         mods.add(Mtext);
         servers.add(Stext);
 
-        JLabel Wamount = new JLabel(LanguageManager.get("dashboard.worlds.count"));
-        JLabel Mamount = new JLabel(LanguageManager.get("dashboard.mods.count"));
-        JLabel Samount = new JLabel(LanguageManager.get("dashboard.servers.count"));
+        JLabel Wamount = new JLabel(languageManager.get("dashboard.worlds.count"));
+        JLabel Mamount = new JLabel(languageManager.get("dashboard.mods.count"));
+        JLabel Samount = new JLabel(languageManager.get("dashboard.servers.count"));
         Wamount.setFont(new Font("Roboto", Font.BOLD, 20));
         Mamount.setFont(new Font("Roboto", Font.BOLD, 20));
         Samount.setFont(new Font("Roboto", Font.BOLD, 20));

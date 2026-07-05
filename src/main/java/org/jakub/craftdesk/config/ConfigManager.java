@@ -114,4 +114,7 @@ public class ConfigManager {
     public String getTheme() {
         return theme;
     }
+    public String getLanguage() {
+        return language;
+    }
 }

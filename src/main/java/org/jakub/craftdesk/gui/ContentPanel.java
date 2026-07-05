@@ -10,6 +10,7 @@ public class ContentPanel extends JPanel {
 
     private ConfigManager configManager;
     private ThemeManager themeManager;
+    private LanguageManager languageManager;
     private CardLayout cardLayout = new CardLayout();
 
     private DashboardPanel dashboardPanel;
@@ -18,15 +19,16 @@ public class ContentPanel extends JPanel {
     private ServersPanel serversPanel;
     private SettingsPanel settingsPanel;
 
-    public ContentPanel(ConfigManager configManager , ThemeManager themeManager) {
+    public ContentPanel(ConfigManager configManager , ThemeManager themeManager , LanguageManager languageManager) {
 
         this.configManager = configManager;
         this.themeManager = themeManager;
+        this.languageManager = languageManager;
 
         setLayout(cardLayout);
         setBounds(250, 0, 950, 700);
 
-        dashboardPanel = new DashboardPanel(configManager , themeManager);
+        dashboardPanel = new DashboardPanel(configManager , themeManager , languageManager);
         worldsPanel = new WorldsPanel();
         modsPanel = new ModsPanel();
         serversPanel = new ServersPanel();

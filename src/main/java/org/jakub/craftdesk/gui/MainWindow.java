@@ -7,11 +7,13 @@ import org.jakub.craftdesk.theme.ThemeManager;
 public class MainWindow {
     private ConfigManager configManager;
     private ThemeManager themeManager;
+    private LanguageManager languageManager;
 
     JFrame frame;
-    public MainWindow(ConfigManager configManager , ThemeManager themeManager) {
+    public MainWindow(ConfigManager configManager , ThemeManager themeManager , LanguageManager languageManager) {
         this.configManager = configManager;
         this.themeManager = themeManager;
+        this.languageManager = languageManager;
 
         ImageIcon icon = new ImageIcon(getClass().getResource("/images/icon.png"));
 
@@ -29,10 +31,10 @@ public class MainWindow {
 
         frame.setLayout(null);
 
-        ContentPanel contentPanel = new ContentPanel(configManager , themeManager);
+        ContentPanel contentPanel = new ContentPanel(configManager , themeManager , languageManager);
         frame.add(contentPanel);
 
-        SideBarPanel sideBarPanel = new SideBarPanel(contentPanel , themeManager);
+        SideBarPanel sideBarPanel = new SideBarPanel(contentPanel , themeManager , languageManager);
         frame.add(sideBarPanel);
 
         ConfigManager config = new ConfigManager();

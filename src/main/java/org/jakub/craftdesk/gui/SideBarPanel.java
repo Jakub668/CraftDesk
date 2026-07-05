@@ -6,6 +6,7 @@ import org.jakub.craftdesk.theme.ThemeManager;
 
 public class SideBarPanel extends JPanel {
     private ThemeManager themeManager;
+    private LanguageManager languageManager;
 
     private void ustawAktywnyPrzycisk(
             JButton aktywny,
@@ -32,8 +33,9 @@ public class SideBarPanel extends JPanel {
         aktywny.setForeground(themeManager.getTextColor());
     }
 
-    public SideBarPanel(ContentPanel contentPanel , ThemeManager themeManager) {
+    public SideBarPanel(ContentPanel contentPanel , ThemeManager themeManager , LanguageManager languageManager) {
         this.themeManager = themeManager;
+        this.languageManager = languageManager;
 
         setLayout(null);
         setBackground(themeManager.getSidebarColor());
@@ -49,11 +51,11 @@ public class SideBarPanel extends JPanel {
         JButton mody = new JButton();
         JButton serwery = new JButton();
         JButton ustawienia = new JButton();
-        dashboard.setText(LanguageManager.get("sidebar.dashboard"));
-        swiaty.setText(LanguageManager.get("sidebar.worlds"));
-        mody.setText(LanguageManager.get("sidebar.mods"));
-        serwery.setText(LanguageManager.get("sidebar.servers"));
-        ustawienia.setText(LanguageManager.get("sidebar.settings"));
+        dashboard.setText(languageManager.get("sidebar.dashboard"));
+        swiaty.setText(languageManager.get("sidebar.worlds"));
+        mody.setText(languageManager.get("sidebar.mods"));
+        serwery.setText(languageManager.get("sidebar.servers"));
+        ustawienia.setText(languageManager.get("sidebar.settings"));
         dashboard.setBackground(themeManager.getActiveButtonColor());
         swiaty.setBackground(themeManager.getButtonColor());
         mody.setBackground(themeManager.getButtonColor());
