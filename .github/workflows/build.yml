@@ -18,7 +18,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
       - run: chmod +x gradlew
       - run: ./gradlew jar
-      - run: sudo apt-get update && sudo apt-get install -y rpm fakeroot wget curl unzip
+      - run: sudo apt-get update && sudo apt-get install -y rpm fakeroot wget curl unzip libfuse2
 
       - name: Run jpackage for Linux
         run: |
@@ -78,7 +78,8 @@ jobs:
           ln -s bin/CraftDesk "$APP_DIR/AppRun"
           chmod +x "$APP_DIR/AppRun"
 
-          ./appimagetool-x86_64.AppImage "$APP_DIR"
+          # Użycie flagi --appimage-extract-and-run pozwala ominąć problemy z FUSE w środowiskach CI/CD
+          ./appimagetool-x86_64.AppImage --appimage-extract-and-run "$APP_DIR"
           
           mkdir -p dist-linux/appimage
           mv *.AppImage dist-linux/appimage/
