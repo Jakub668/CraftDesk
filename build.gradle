@@ -32,10 +32,12 @@ test {
 
 jar {
     manifest {
-        attributes(
-                'Main-Class': 'org.jakub.craftdesk.CraftDeskApp'
-        )
+        attributes 'Main-Class': 'org.jakub.craftdesk.CraftDeskApp'
     }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 application {
