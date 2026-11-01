@@ -2,9 +2,9 @@ name: Build All CraftDesk Formats
 
 on:
   push:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main", "master" ]
+    branches: [ "main" ]
 
 jobs:
   build-linux:
@@ -18,11 +18,15 @@ jobs:
       - uses: gradle/actions/setup-gradle@v3
       - run: chmod +x gradlew
       - run: ./gradlew jar
-      - run: sudo apt-get update && sudo apt-get install -y rpm fakeroot
+      - run: sudo apt-get update && sudo apt-get install -y rpm fakeroot wget curl unzip
+
       - name: Run jpackage for Linux
         run: |
           JAR_FILE=$(basename build/libs/*.jar)
           echo "Found JAR: $JAR_FILE"
+
+          curl -sL https://download.gluonhq.com/openjfx/21.0.10/openjfx-21.0.10_linux-x64_bin-sdk.zip -o javafx-sdk.zip
+          unzip -q javafx-sdk.zip
 
           jpackage \
             --type deb \
@@ -31,6 +35,8 @@ jobs:
             --input build/libs \
             --main-jar "$JAR_FILE" \
             --main-class org.jakub.craftdesk.CraftDeskApp \
+            --module-path javafx-sdk-21.0.10/lib \
+            --add-modules javafx.controls,javafx.fxml \
             --icon src/main/resources/images/icon.png \
             --dest dist-linux
 
@@ -41,6 +47,8 @@ jobs:
             --input build/libs \
             --main-jar "$JAR_FILE" \
             --main-class org.jakub.craftdesk.CraftDeskApp \
+            --module-path javafx-sdk-21.0.10/lib \
+            --add-modules javafx.controls,javafx.fxml \
             --icon src/main/resources/images/icon.png \
             --dest dist-linux
 
@@ -51,8 +59,41 @@ jobs:
             --input build/libs \
             --main-jar "$JAR_FILE" \
             --main-class org.jakub.craftdesk.CraftDeskApp \
+            --module-path javafx-sdk-21.0.10/lib \
+            --add-modules javafx.controls,javafx.fxml \
             --icon src/main/resources/images/icon.png \
             --dest dist-linux
+
+      - name: Build AppImage using appimagetool
+        run: |
+          wget https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage
+          chmod +x appimagetool-x86_64.AppImage
+
+          APP_DIR="dist-linux/CraftDesk"
+
+          if [ -f "$APP_DIR/lib/CraftDesk.png" ]; then
+            cp "$APP_DIR/lib/CraftDesk.png" "$APP_DIR/icon.png"
+          elif [ -f "src/main/resources/images/icon.png" ]; then
+            cp "src/main/resources/images/icon.png" "$APP_DIR/icon.png"
+          fi
+
+          cat << 'EOF' > "$APP_DIR/CraftDesk.desktop"
+          [Desktop Entry]
+          Type=Application
+          Name=CraftDesk
+          Exec=CraftDesk
+          Icon=icon
+          Categories=Utility;
+          EOF
+
+          ln -s bin/CraftDesk "$APP_DIR/AppRun"
+          chmod +x "$APP_DIR/AppRun"
+
+          ./appimagetool-x86_64.AppImage "$APP_DIR"
+          
+          mkdir -p dist-linux/appimage
+          mv *.AppImage dist-linux/appimage/
+
       - uses: actions/upload-artifact@v4
         with:
           name: CraftDesk-Linux-Formats
@@ -76,6 +117,9 @@ jobs:
           JAR_FILE=$(basename build/libs/*.jar)
           echo "Found JAR: $JAR_FILE"
 
+          curl -sL https://download.gluonhq.com/openjfx/21.0.10/openjfx-21.0.10_windows-x64_bin-sdk.zip -o javafx-sdk.zip
+          unzip -q javafx-sdk.zip
+
           jpackage \
             --type msi \
             --name "CraftDesk" \
@@ -83,39 +127,5 @@ jobs:
             --input build/libs \
             --main-jar "$JAR_FILE" \
             --main-class org.jakub.craftdesk.CraftDeskApp \
-            --icon src/main/resources/images/icon.png \
-            --dest dist-windows
-      - uses: actions/upload-artifact@v4
-        with:
-          name: CraftDesk-Windows-Formats
-          path: dist-windows/
-
-  build-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          java-version: '21'
-          distribution: 'temurin'
-      - uses: gradle/actions/setup-gradle@v3
-      - run: chmod +x gradlew
-      - run: ./gradlew jar
-      - name: Create macOS .dmg package
-        run: |
-          JAR_FILE=$(basename build/libs/*.jar)
-          echo "Found JAR: $JAR_FILE"
-
-          jpackage \
-            --type dmg \
-            --name "CraftDesk" \
-            --app-version "1.0.3" \
-            --input build/libs \
-            --main-jar "$JAR_FILE" \
-            --main-class org.jakub.craftdesk.CraftDeskApp \
-            --icon src/main/resources/images/icon.png \
-            --dest dist-macos
-      - uses: actions/upload-artifact@v4
-        with:
-          name: CraftDesk-macOS-Formats
-          path: dist-macos/
+            --module-path javafx-sdk-21.0.10/lib \
+            --add-modules javafx.controls,javafx
