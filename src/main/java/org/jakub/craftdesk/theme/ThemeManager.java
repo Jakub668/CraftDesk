@@ -1,10 +1,9 @@
 package org.jakub.craftdesk.theme;
 
 import org.jakub.craftdesk.config.ConfigManager;
-import org.jakub.craftdesk.gui.LanguageManager;
+import org.jakub.craftdesk.i18n.LanguageManager;
 
 import java.awt.*;
-import java.io.*;
 
 public class ThemeManager {
     private ConfigManager configManager;
@@ -51,7 +50,7 @@ public class ThemeManager {
     public void loadTheme(ConfigManager configManager , LanguageManager languageManager) {
         this.configManager = configManager;
         this.languageManager = languageManager;
-        String theme = configManager.getTheme();
+        String theme = "dark";
         if (theme.equals("dark")) {
             dark();
         }

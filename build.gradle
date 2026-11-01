@@ -1,15 +1,26 @@
 plugins {
     id 'java'
+    id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
+    id 'com.gradleup.shadow' version '9.3.0'
 }
 
 group = 'org.jakub.craftdesk'
-version = '0.1-Alpha'
+version = '0.1.3'
 
 repositories {
     mavenCentral()
 }
 
+javafx {
+    version = '21.0.10'
+    modules = [ 'javafx.controls', 'javafx.fxml' ]
+}
+
 dependencies {
+    implementation 'ch.qos.logback:logback-classic:1.5.18'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
     testImplementation platform('org.junit:junit-bom:6.0.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
@@ -22,7 +33,11 @@ test {
 jar {
     manifest {
         attributes(
-                'Main-Class': 'org.jakub.craftdesk.Main'
+                'Main-Class': 'org.jakub.craftdesk.CraftDeskApp'
         )
     }
+}
+
+application {
+    mainClass = 'org.jakub.craftdesk.CraftDeskApp'
 }

@@ -1,120 +1,99 @@
 package org.jakub.craftdesk.config;
 
-import java.io.*;
-import java.util.Properties;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.logging.FileHandler;
+import java.util.logging.Logger;
+import java.util.logging.SimpleFormatter;
 
 public class ConfigManager {
-
-    private String language = "pl_PL";
-    private String theme = "dark";
-    private String username = "Gracz";
+    private static final Logger logger = Logger.getLogger(ConfigManager.class.getName());
+    private static final String DIR_NAME = ".craftdesk";
+    private static final String FILE_NAME = "config.json";
 
     private final File configFile;
-    private final Properties properties = new Properties();
+
+    // Username field
+    private String username = "";
 
     public ConfigManager() {
-
         String home = System.getProperty("user.home");
-
-        File dir = new File(home, ".craftdesk");
+        File dir = new File(home, DIR_NAME);
 
         if (!dir.exists()) {
-            dir.mkdirs();
-        }
-
-        configFile = new File(dir, "config.properties");
-    }
-
-    public void init() {
-
-        File craftDeskDir = new File(System.getProperty("user.home"), ".craftdesk");
-
-        if (!craftDeskDir.exists()) {
-            boolean created = craftDeskDir.mkdirs();
-
+            boolean created = dir.mkdirs();
             if (created) {
-                System.out.println("Utworzono folder .craftdesk");
+                logger.info("Created directory: " + DIR_NAME);
             } else {
-                System.out.println("Nie udało się utworzyć folderu .craftdesk");
+                logger.warning("Failed to create directory: " + DIR_NAME);
             }
-        } else {
-            System.out.println("Folder .craftdesk już istnieje");
         }
 
-        if (!configFile.exists()) {
-            System.out.println("Brak config.properties – będzie tworzony później");
-        }
+        configFile = new File(dir, FILE_NAME);
     }
 
-    private void createDefaultConfig() {
-
+    // Initialize logger configuration
+    public void initLogger() {
         try {
-
-            properties.setProperty("language", "pl_PL");
-            properties.setProperty("theme", "dark");
-            properties.setProperty("username", "Gracz");
-
-            FileOutputStream out = new FileOutputStream(configFile);
-            properties.store(out, "CraftDesk Config");
-            out.close();
-
-            System.out.println("Utworzono domyślny config!");
-
+            File logFile = new File(System.getProperty("user.home") + "/" + DIR_NAME, "craftdesk.log");
+            FileHandler fileHandler = new FileHandler(logFile.getAbsolutePath(), true);
+            fileHandler.setFormatter(new SimpleFormatter());
+            logger.addHandler(fileHandler);
+            logger.info("Logging system initialized.");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    // Check if config.json exists
+    public boolean configFileExists() {
+        return configFile.exists();
+    }
+
+    // Load configuration from JSON
     public void load() {
+        if (!configFile.exists()) {
+            save(); // Create default config if it doesn't exist
+            return;
+        }
 
-        try {
-
-            if (!configFile.exists()) {
-                createDefaultConfig();
+        try (FileReader reader = new FileReader(configFile)) {
+            Gson gson = new Gson();
+            ConfigData data = gson.fromJson(reader, ConfigData.class);
+            if (data != null) {
+                this.username = data.username;
             }
-
-            FileInputStream in = new FileInputStream(configFile);
-            properties.load(in);
-            in.close();
-
-            language = properties.getProperty("language", "pl_PL");
-            theme = properties.getProperty("theme", "dark");
-            username = properties.getProperty("username", "Gracz");
-
-            System.out.println("Config załadowany!");
-
+            logger.info("Configuration loaded successfully.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warning("Error loading configuration: " + e.getMessage());
         }
     }
 
+    // Save configuration to JSON
     public void save() {
+        ConfigData data = new ConfigData();
+        data.username = this.username;
 
-        try {
-
-            properties.setProperty("language", language);
-            properties.setProperty("theme", theme);
-            properties.setProperty("username", username);
-
-            FileOutputStream out = new FileOutputStream(configFile);
-            properties.store(out, "CraftDesk Config");
-            out.close();
-
-            System.out.println("Zapisano config!");
-
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        try (FileWriter writer = new FileWriter(configFile)) {
+            gson.toJson(data, writer);
+            logger.info("Configuration saved successfully.");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.warning("Error saving configuration: " + e.getMessage());
         }
     }
 
-    public String getUsername() {
-        return username;
-    }
+    // Getters and Setters
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public String getTheme() {
-        return theme;
-    }
-    public String getLanguage() {
-        return language;
+    // Helper inner class for JSON mapping via Gson
+    private static class ConfigData {
+        String username = "";
     }
 }

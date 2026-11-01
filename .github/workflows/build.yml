@@ -1,0 +1,151 @@
+name: Build All CraftDesk Formats
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build JAR with Gradle
+        run: ./gradlew jar
+
+      - name: Install packaging tools
+        run: sudo apt-get update && sudo apt-get install -y rpm fakeroot
+
+      - name: Create .deb package
+        run: |
+          jpackage \
+            --type deb \
+            --name "CraftDesk" \
+            --app-version "0.1.3" \
+            --input build/libs \
+            --main-jar CraftDesk-0.1.3.jar \
+            --main-class org.jakub.craftdesk.CraftDeskApp \
+            --icon src/main/resources/images/icon.png \
+            --dest dist-linux
+
+      - name: Create .rpm package
+        run: |
+          jpackage \
+            --type rpm \
+            --name "CraftDesk" \
+            --app-version "0.1.3" \
+            --input build/libs \
+            --main-jar CraftDesk-0.1.3.jar \
+            --main-class org.jakub.craftdesk.CraftDeskApp \
+            --icon src/main/resources/images/icon.png \
+            --dest dist-linux
+
+      - name: Create .AppImage (via app-image type)
+        run: |
+          jpackage \
+            --type app-image \
+            --name "CraftDesk" \
+            --app-version "0.1.3" \
+            --input build/libs \
+            --main-jar CraftDesk-0.1.3.jar \
+            --main-class org.jakub.craftdesk.CraftDeskApp \
+            --icon src/main/resources/images/icon.png \
+            --dest dist-linux
+
+      - name: Upload Linux Artifacts (.deb, .rpm, AppImage folder, and JAR)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CraftDesk-Linux-Formats
+          path: |
+            dist-linux/
+            build/libs/CraftDesk-0.1.3.jar
+
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Build JAR with Gradle
+        run: ./gradlew.bat jar
+
+      - name: Create Windows .exe/.msi installer
+        run: |
+          jpackage ^
+            --type msi ^
+            --name "CraftDesk" ^
+            --app-version "0.1.3" ^
+            --input build/libs ^
+            --main-jar CraftDesk-0.1.3.jar ^
+            --main-class org.jakub.craftdesk.CraftDeskApp ^
+            --icon src/main/resources/images/icon.png ^
+            --dest dist-windows
+
+      - name: Upload Windows Artifact (.msi / .exe)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CraftDesk-Windows-Formats
+          path: dist-windows/
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build JAR with Gradle
+        run: ./gradlew jar
+
+      - name: Create macOS .dmg package
+        run: |
+          jpackage \
+            --type dmg \
+            --name "CraftDesk" \
+            --app-version "0.1.3" \
+            --input build/libs \
+            --main-jar CraftDesk-0.1.3.jar \
+            --main-class org.jakub.craftdesk.CraftDeskApp \
+            --icon src/main/resources/images/icon.png \
+            --dest dist-macos
+
+      - name: Upload macOS Artifact (.dmg)
+        uses: actions/upload-artifact@v4
+        with:
+          name: CraftDesk-macOS-Formats
+          path: dist-macos/

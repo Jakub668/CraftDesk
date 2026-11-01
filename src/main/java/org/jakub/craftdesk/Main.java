@@ -1,8 +1,7 @@
 package org.jakub.craftdesk;
 
 import org.jakub.craftdesk.config.ConfigManager;
-import org.jakub.craftdesk.gui.LanguageManager;
-import org.jakub.craftdesk.gui.MainWindow;
+import org.jakub.craftdesk.i18n.LanguageManager;
 import org.jakub.craftdesk.theme.ThemeManager;
 
 public class Main {
@@ -12,8 +11,6 @@ public class Main {
         configManager.load();
         LanguageManager languageManager = new LanguageManager(configManager);
         ThemeManager themeManager = new ThemeManager(configManager , languageManager);
-
-        new MainWindow(configManager , themeManager, languageManager);
 
     }
 
